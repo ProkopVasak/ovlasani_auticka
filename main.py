@@ -1,4 +1,4 @@
-speedFactor = -80
+speedFactor = -100
 pin_Trig = DigitalPin.P8
 pin_Echo = DigitalPin.P15
 l = DigitalPin.P13
@@ -77,19 +77,19 @@ def movement():
     global connected
     # if connected ==0:
     def on_forever():
-            global manual
-            if manual == True:
+                global manual
+            #if manual == True:
                 l = pins.digital_read_pin(DigitalPin.P13)
                 r = pins.digital_read_pin(DigitalPin.P14)
                 if l == whiteline and r != whiteline:
-                    motor_run(0, 50)
+                    motor_run(0, 70)
                 elif l != whiteline and r == whiteline:
-                    motor_run(50, 0)
+                    motor_run(70, 0)
                 elif l == whiteline and r == whiteline:
-                    motor_run(50, 50)
+                    motor_run(70, 70)
                 elif l != whiteline and r != whiteline:
-                    motor_run(50, 50)
-                basic.pause(50) #reakční frekvence 20 Hz  
+                    motor_run(70, 70)
+                basic.pause(40) #reakční frekvence 20 Hz  
             # print(l+""+r)
     basic.forever(on_forever)
 basic.forever(movement)

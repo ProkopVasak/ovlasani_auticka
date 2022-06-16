@@ -1,4 +1,4 @@
-let speedFactor = -80
+let speedFactor = -100
 let pin_Trig = DigitalPin.P8
 let pin_Echo = DigitalPin.P15
 let l = DigitalPin.P13
@@ -82,24 +82,20 @@ basic.forever(function movement() {
     // reakční frekvence 20 Hz  
     //  print(l+""+r)
     basic.forever(function on_forever() {
-        let l: number;
-        let r: number;
         
-        if (manual == true) {
-            l = pins.digitalReadPin(DigitalPin.P13)
-            r = pins.digitalReadPin(DigitalPin.P14)
-            if (l == whiteline && r != whiteline) {
-                motor_run(0, 50)
-            } else if (l != whiteline && r == whiteline) {
-                motor_run(50, 0)
-            } else if (l == whiteline && r == whiteline) {
-                motor_run(50, 50)
-            } else if (l != whiteline && r != whiteline) {
-                motor_run(50, 50)
-            }
-            
-            basic.pause(50)
+        // if manual == True:
+        let l = pins.digitalReadPin(DigitalPin.P13)
+        let r = pins.digitalReadPin(DigitalPin.P14)
+        if (l == whiteline && r != whiteline) {
+            motor_run(0, 70)
+        } else if (l != whiteline && r == whiteline) {
+            motor_run(70, 0)
+        } else if (l == whiteline && r == whiteline) {
+            motor_run(70, 70)
+        } else if (l != whiteline && r != whiteline) {
+            motor_run(70, 70)
         }
         
+        basic.pause(40)
     })
 })
