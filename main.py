@@ -47,18 +47,20 @@ def on_bluetooth_connected():
             motor_run(80, -80)   
             basic.pause(580) 
             motor_stop()
-        elif uartData == "F":
+        elif uartData == "H":
             motor_run(-80, 80)
             basic.pause(580)
             motor_stop()
         elif uartData == "E":
-            motor_stop()    
+            motor_stop()  
+        elif uartData == "F":
+            control.reset() 
 bluetooth.on_bluetooth_connected(on_bluetooth_connected)
 
 def on_bluetooth_disconnected():
     global connected
     basic.show_icon(IconNames.SAD)
-    connected = 0
+    # connected = 0
 bluetooth.on_bluetooth_disconnected(on_bluetooth_disconnected)
 
 def manual_movement():
@@ -72,9 +74,10 @@ input.on_button_pressed(Button.A, manual_movement)
 
 
 def movement():
-    if connected ==0:
-        def on_forever():
-            global manual, connected
+    global connected
+    # if connected ==0:
+    def on_forever():
+            global manual
             if manual == True:
                 l = pins.digital_read_pin(DigitalPin.P13)
                 r = pins.digital_read_pin(DigitalPin.P14)
@@ -86,7 +89,7 @@ def movement():
                     motor_run(50, 50)
                 elif l != whiteline and r != whiteline:
                     motor_run(50, 50)
-                basic.pause(50) #reakční frekvence 20 Hz
+                basic.pause(50) #reakční frekvence 20 Hz  
             # print(l+""+r)
-        basic.forever(on_forever)
+    basic.forever(on_forever)
 basic.forever(movement)

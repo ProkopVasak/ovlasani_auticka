@@ -49,20 +49,22 @@ bluetooth.onBluetoothConnected(function on_bluetooth_connected() {
             motor_run(80, -80)
             basic.pause(580)
             motor_stop()
-        } else if (uartData == "F") {
+        } else if (uartData == "H") {
             motor_run(-80, 80)
             basic.pause(580)
             motor_stop()
         } else if (uartData == "E") {
             motor_stop()
+        } else if (uartData == "F") {
+            control.reset()
         }
         
     }
 })
+//  connected = 0
 bluetooth.onBluetoothDisconnected(function on_bluetooth_disconnected() {
     
     basic.showIcon(IconNames.Sad)
-    connected = 0
 })
 input.onButtonPressed(Button.A, function manual_movement() {
     
@@ -75,30 +77,29 @@ input.onButtonPressed(Button.A, function manual_movement() {
     console.log(manual)
 })
 basic.forever(function movement() {
-    if (connected == 0) {
-        // reakční frekvence 20 Hz
-        //  print(l+""+r)
-        basic.forever(function on_forever() {
-            let l: number;
-            let r: number;
-            
-            if (manual == true) {
-                l = pins.digitalReadPin(DigitalPin.P13)
-                r = pins.digitalReadPin(DigitalPin.P14)
-                if (l == whiteline && r != whiteline) {
-                    motor_run(0, 50)
-                } else if (l != whiteline && r == whiteline) {
-                    motor_run(50, 0)
-                } else if (l == whiteline && r == whiteline) {
-                    motor_run(50, 50)
-                } else if (l != whiteline && r != whiteline) {
-                    motor_run(50, 50)
-                }
-                
-                basic.pause(50)
+    
+    //  if connected ==0:
+    // reakční frekvence 20 Hz  
+    //  print(l+""+r)
+    basic.forever(function on_forever() {
+        let l: number;
+        let r: number;
+        
+        if (manual == true) {
+            l = pins.digitalReadPin(DigitalPin.P13)
+            r = pins.digitalReadPin(DigitalPin.P14)
+            if (l == whiteline && r != whiteline) {
+                motor_run(0, 50)
+            } else if (l != whiteline && r == whiteline) {
+                motor_run(50, 0)
+            } else if (l == whiteline && r == whiteline) {
+                motor_run(50, 50)
+            } else if (l != whiteline && r != whiteline) {
+                motor_run(50, 50)
             }
             
-        })
-    }
-    
+            basic.pause(50)
+        }
+        
+    })
 })
