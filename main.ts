@@ -1,4 +1,4 @@
-let speedFactor = -100
+let speedFactor = -90
 let pin_Trig = DigitalPin.P8
 let pin_Echo = DigitalPin.P15
 let l = DigitalPin.P13
@@ -21,81 +21,70 @@ function motor_stop() {
     PCAmotor.MotorStop(PCAmotor.Motors.M2)
 }
 
-bluetooth.onBluetoothConnected(function on_bluetooth_connected() {
-    let uartData: string;
-    
-    basic.showIcon(IconNames.Heart)
+/** def on_bluetooth_connected():
+    global connected
+    basic.show_icon(IconNames.HEART)
     connected = 1
-    while (connected == 1) {
-        uartData = bluetooth.uartReadUntil(serial.delimiters(Delimiters.Hash))
-        console.logValue("data", uartData)
-        if (uartData == "A") {
+    while connected == 1:
+        uartData = bluetooth.uart_read_until(serial.delimiters(Delimiters.HASH))
+        console.log_value("data", uartData)
+        if uartData == "A":
             motor_run(70, 70)
             basic.pause(500)
             motor_stop()
-        } else if (uartData == "B") {
+        elif uartData == "B":
             motor_run(-70, -70)
             basic.pause(300)
-            motor_stop()
-        } else if (uartData == "C") {
+            motor_stop()    
+        elif uartData == "C":
             motor_run(70, 0)
             basic.pause(300)
             motor_stop()
-        } else if (uartData == "D") {
+        elif uartData == "D":
             motor_run(0, 70)
             basic.pause(300)
             motor_stop()
-        } else if (uartData == "G") {
-            motor_run(80, -80)
-            basic.pause(580)
+        elif uartData == "G":
+            motor_run(80, -80)   
+            basic.pause(580) 
             motor_stop()
-        } else if (uartData == "H") {
+        elif uartData == "H":
             motor_run(-80, 80)
             basic.pause(580)
             motor_stop()
-        } else if (uartData == "E") {
-            motor_stop()
-        } else if (uartData == "F") {
-            control.reset()
-        }
-        
+        elif uartData == "E":
+            motor_stop()  
+        elif uartData == "F":
+            control.reset() 
+bluetooth.on_bluetooth_connected(on_bluetooth_connected)
+
+def on_bluetooth_disconnected():
+    global connected
+    basic.show_icon(IconNames.SAD)
+    # connected = 0
+bluetooth.on_bluetooth_disconnected(on_bluetooth_disconnected)
+
+def manual_movement():
+    global manual
+    if manual == False: manual = True
+    else: manual = False
+    print(manual)    
+input.on_button_pressed(Button.A, manual_movement)
+ */
+// reakční frekvence 20 Hz  
+basic.forever(function on_forever() {
+    
+    let l = pins.digitalReadPin(DigitalPin.P13)
+    let r = pins.digitalReadPin(DigitalPin.P14)
+    if (l == whiteline && r != whiteline) {
+        motor_run(0, 50)
+    } else if (l != whiteline && r == whiteline) {
+        motor_run(50, 0)
+    } else if (l == whiteline && r == whiteline) {
+        motor_run(50, 50)
+    } else if (l != whiteline && r != whiteline) {
+        motor_run(50, 0)
     }
-})
-//  connected = 0
-bluetooth.onBluetoothDisconnected(function on_bluetooth_disconnected() {
     
-    basic.showIcon(IconNames.Sad)
-})
-input.onButtonPressed(Button.A, function manual_movement() {
-    
-    if (manual == false) {
-        manual = true
-    } else {
-        manual = false
-    }
-    
-    console.log(manual)
-})
-basic.forever(function movement() {
-    
-    //  if connected ==0:
-    // reakční frekvence 20 Hz  
-    //  print(l+""+r)
-    basic.forever(function on_forever() {
-        
-        // if manual == True:
-        let l = pins.digitalReadPin(DigitalPin.P13)
-        let r = pins.digitalReadPin(DigitalPin.P14)
-        if (l == whiteline && r != whiteline) {
-            motor_run(0, 70)
-        } else if (l != whiteline && r == whiteline) {
-            motor_run(70, 0)
-        } else if (l == whiteline && r == whiteline) {
-            motor_run(70, 70)
-        } else if (l != whiteline && r != whiteline) {
-            motor_run(70, 70)
-        }
-        
-        basic.pause(40)
-    })
+    basic.pause(40)
 })
